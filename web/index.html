@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+    <head>
+        <title>Bus Ticketing</title>
+
+        <script src="angularjs/1.4.8/angular.min.js"></script>  
+        <link rel="stylesheet" href="bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="jquery/1.11.3/jquery.min.js"></script>
+        <script src="bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="w3/w3.css">
+        <link rel="stylesheet" href="w3/w3-theme-red.css">
+
+        <!-- Bootstrap Select -->
+        <link rel="stylesheet" href="bootstrap-select/bootstrap-select.min.css">
+        <script src="bootstrap-select/bootstrap-select.min.js"></script>
+
+
+
+        <script>
+            var app = angular.module("myApp", []);
+            app.controller("myCtrl", function ($scope, $http) {
+
+                $scope.busTicketURL = [];
+                $scope.busTicketingForm = {id: -1, currentDate: "", startDate: "", passengerName: "", passengerAge: "", passengerSex: "", phoneNumber: "", passengerDestination: "", busNumber: "", busName: "", busType: "", ticketType: "", totalAmount: ""};
+
+                _refreshBusTicketData();
+
+                $scope.submitBusTicket = function () {
+                    $http({method: "POST", url: 'rest/busTicketURL', data: angular.toJson($scope.busTicketingForm), headers: {'Content-Type': 'application/json'}}).then(_success, _error);
+                };
+
+                function _refreshBusTicketData() {
+                    $http({method: 'GET', url: 'http://localhost:8084/AngularJS_RESTfulWebService_Ticketing/rest/busTicketURL'});
+                };
+
+                function _success(response) {
+                    _refreshBusTicketData();
+                    _clearFormData();
+                };
+
+                function _error(response) {
+                    console.log(response.statusText);
+                };
+
+                function _clearFormData() {
+                    $scope.busTicketingForm.id = -1;
+                    $scope.busTicketingForm.currentDate = "";
+                    $scope.busTicketingForm.startDate = "";
+                    $scope.busTicketingForm.passengerName = "";
+                    $scope.busTicketingForm.passengerAge = "";
+                    $scope.busTicketingForm.passengerSex = "";
+                    $scope.busTicketingForm.phoneNumber = "";
+                    $scope.busTicketingForm.passengerDestination = "";
+                    $scope.busTicketingForm.busNumber = "";
+                    $scope.busTicketingForm.busName = "";
+                    $scope.busTicketingForm.busType = "";
+                    $scope.busTicketingForm.ticketType = "";
+                    $scope.busTicketingForm.totalAmount = "";
+                };
+
+                $scope.today = new Date();
+
+//                $scope.AddNumbers = function () {
+//                    var perTicketPrice = Number($scope.perTicketPrice || 0);
+//                    var ticketQuantity = Number($scope.ticketQuantity || 0);
+//                    $scope.totalAmount = ((perTicketPrice * ticketQuantity * 15) / 100) + (perTicketPrice * ticketQuantity);
+//                };
+
+            });
+        </script>
+
+        <style>
+            /* Remove the navbar's default margin-bottom and rounded borders */ 
+            .navbar {
+                margin-bottom: 0;
+                border-radius: 0;
+                padding: 20px;
+                margin: 0px 0px 0px 0px;
+            }
+
+            /* Set black background color, white text and some padding */
+            footer {
+                background-color: #222;
+                color: white;
+                padding: 30px;
+                margin: 0px;
+            }
+            .table-hover {
+                /* cursor: pointer; */
+            }
+            .container{
+                margin-bottom: 50px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!-- ================== Toolbar ================== -->
+
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>                        
+                    </button>
+                    <a class="navbar-brand" href="#">Logo</a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <!-- <li class="active"><a href="#">Home</a></li> -->
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Projects</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+
+
+
+
+        <!-- ================== Form ================== -->
+
+        <div ng-controller="myCtrl">
+
+
+            <div class="container">
+
+                <div class="page-header">
+                    <h1 class="text-right">BUS TICKETING</h1>      
+                </div>
+                <h2>Ticket Booking</h2>
+                <form class="form-horizontal" role="form">
+                    <!--<form class="form-horizontal" role="form" ng-submit="submitBusTicket()">-->
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="date">Date:</label>
+                        <div class="col-sm-10">
+                            <input type="date" class="form-control" id="currentDate" ng-model="busTicketingForm.currentDate"/>
+                            <!-- <input type="date" name="bday">
+                                    <p>{{ today | date : "dd/MM/y" }}</p>
+                                    <p>{{ today | date : "dd MMMM yyyy" }}</p> 
+                            <input type="search" name="googlesearch">
+                            <input type="text" class="form-control" id="sdate" ng-model="(today | date : 'dd/MM/y')" placeholder="Enter start date"> -->
+                            <tt>Value = {{busTicketingForm.currentDate| json}}</tt><br/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="startDate">Start Date:</label>
+                        <div class="col-sm-10">          
+                            <input type="date" class="form-control" id="sdate" ng-model="busTicketingForm.startDate"/>
+                            <tt>Value = {{busTicketingForm.startDate| json}}</tt><br/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="passengerName">Passenger Name:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" placeholder="Enter name" ng-model="busTicketingForm.passengerName"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="passengerAge">Age:</label>
+                        <div class="col-sm-10">          
+                            <input type="text" class="form-control" id="age" placeholder="Enter age" ng-model="busTicketingForm.passengerAge"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="passengerSex">Sex:</label>
+                        <div class="col-sm-10">          
+                            <div class="radio">
+                                <label><input type="radio" name="gender" value="Male" ng-model="busTicketingForm.passengerSex"/> Male</label>
+                                <label><input type="radio" name="gender" value="Female" ng-model="busTicketingForm.passengerSex"/> Female</label>
+                                <tt>Value = {{busTicketingForm.passengerSex| json}}</tt><br/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="phoneNumber">Phone Number:</label>
+                        <div class="col-sm-10">          
+                            <input type="text" class="form-control" id="phone" placeholder="Enter phone number" ng-model="busTicketingForm.phoneNumber"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="passengerDestination">Destination:</label>
+                        <div class="col-sm-10">          
+                            <select class="selectpicker" data-size="5" style="display: none;" ng-model="busTicketingForm.passengerDestination">
+                                <option value="Chittagong">Chittagong</option>
+                                <option value="Sylhet">Sylhet</option>
+                                <option value="Bogura">Bogura</option>
+                                <option value="Dhaka">Dhaka</option>
+                                <option value="Madaripur">Madaripur</option>
+                                <option value="Barishal">Barishal</option>
+                                <option value="Khulna">Khulna</option>
+                                <option value="Rangpur">Rangpur</option>
+                            </select>
+                            <tt>Destination = {{busTicketingForm.passengerDestination}}</tt>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="busNumber">Bus Number:</label>
+                        <div class="col-sm-10">          
+                            <select class="selectpicker show-tick" data-size="5" style="display: none;" ng-model="busTicketingForm.busNumber">
+                                <option value="101">101</option>
+                                <option value="102">102</option>
+                                <option value="103">103</option>
+                                <option value="104">104</option>
+                                <option value="105">105</option>
+                                <option value="106">106</option>
+                                <option value="107">107</option>
+                                <option value="108">108</option>
+                            </select>
+                            <tt>Bus Number = {{busTicketingForm.busNumber}}</tt>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="busName">Name of Bus:</label>
+                        <div class="col-sm-10">          
+                            <select class="selectpicker" data-size="5" style="display: none;" ng-model="busTicketingForm.busName">
+                                <option value="Symoli">Symoli</option>
+                                <option value="Skyline">Skyline</option>
+                                <option value="Egale">Egale</option>
+                                <option value="Sakura">Sakura</option>
+                            </select>
+                            <tt>Name of Bus = {{busTicketingForm.busName}}</tt>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="busType">Type of Bus:</label>
+                        <div class="col-sm-10">
+                            <div class="radio">
+                                <label><input type="radio" name="gender" value="Normal" ng-model="busTicketingForm.busType"/> Normal</label>
+                                <label><input type="radio" name="gender" value="Normal (A/C)" ng-model="busTicketingForm.busType"/> Normal (A/C)</label>
+                                <label><input type="radio" name="gender" value="Business Class" ng-model="busTicketingForm.busType"/> Business Class</label>
+                                <tt>Value = {{busTicketingForm.busType| json}}</tt><br/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="ticketType">Ticket Type:</label>
+                        <div class="col-sm-10">
+                            <div class="radio">
+                                <label><input type="radio" name="gender" id="2" value="UP (single)" ng-model="busTicketingForm.ticketType"/> UP (single)</label>
+                                <label><input type="radio" name="gender" id="1" value="UP-Down (Return)" ng-model="busTicketingForm.ticketType"/> UP-Down (Return)</label>
+                                <tt>Value = {{busTicketingForm.ticketType| json}}</tt><br/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="ticketPrice">Ticket Price (per):</label>
+                        <div class="col-sm-10">          
+                            <input type="text" class="form-control" id="ticketPrice" placeholder="Enter ticket price" ng-model="perTicketPrice"/> 
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="quantity">Quantity:</label>
+                        <div class="col-sm-10">          
+                            <input type="text" class="form-control" id="quantity" placeholder="Enter quantity" ng-model="ticketQuantity"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="tax">Tax (15%):</label>
+                        <div class="col-sm-10">          
+                            <input type="text" class="form-control" id="tax" placeholder="" ng-model="((perTicketPrice * ticketQuantity * 15) / 100)"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="total">Total Amount:</label>
+                        <div class="col-sm-10">          
+                            <input type="text" class="form-control" id="total" placeholder="" ng-model="busTicketingForm.totalAmount=(((perTicketPrice * ticketQuantity * 15) / 100) + (perTicketPrice * ticketQuantity))"/>
+                        </div>
+                    </div>
+                    <div class="form-group">        
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label><input type="checkbox"> Remember me</label>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="form-group">        
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <!--<button type="submit" class="btn btn-default">Submit</button>-->
+                            <button type="submit" class="btn btn-default" ng-click="submitBusTicket()">Submit</button>
+                            <button type="reset" class="btn btn-default">Reset</button>
+                            <button type="button" class="btn btn-default">Display</button>
+                            <button type="button" class="btn btn-default">Exit</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>     
+
+
+        </div>
+
+
+
+
+        <footer class="container-fluid text-center">
+            <p>© Copyright 2016. All rights reserved by mk.</p>
+        </footer>
+
+
+
+    </body>
+</html>
+
+
+<!-- 
+date
+start_date
+passenger_name
+age
+sex
+phone_number
+destination
+bus_number
+bus_name 
+bus_type
+ticket_type
+total_amount
+
+
+
+format			Optional. The date format to display the date in, which can be one or more of the following:
+        
+"yyyy" year (2016)
+"yy" year (16)
+"y" year (2016)
+"MMMM" month (January)
+"MMM" month (Jan)
+"MM" month (01)
+"M" month (1)
+"dd" day (06) 
+"d" day (6)
+"EEEE" day (Tuesday)
+"EEE" day (Tue)
+"HH" hour, 00-23 (09)
+"H" hour 0-23 (9)
+"hh" hour in AM/PM, 00-12 (09)
+"h" hour in AM/PM, 0-12 (9)
+"mm" minute (05)
+"m" minute (5)
+"ss" second (05)
+"s" second (5)
+"sss" millisecond (035)
+"a" (AM/PM)
+"Z" timezone (from -1200 to +1200)
+"ww" week (00-53)
+"w" week (0-53)
+"G" era (AD)
+"GG" era (AD)
+"GGG" era (AD)
+"GGGG" era (Anno Domini)
+
+The format value can also be one of the following predefined formats:
+"short" same as "M/d/yy h:mm a" (1/5/16 9:05 AM)
+"medium" same as "MMM d, y h:mm:ss a" (Jan 5, 2016 9:05:05 AM)
+"shortDate" same as "M/d/yy" (1/5/16)
+"mediumDate" same as "MMM d, y" (Jan 5, 2016)
+"longDate" same as "MMMM d, y" (January 5, 2016)
+"fullDate" same as "EEEE, MMMM d, y" (Tuesday, January 5, 2016)
+"shortTime" same as "h:mm a" (9:05 AM)
+"mediumTime" same as "h:mm:ss a" (9:05:05 AM) 
+-->
